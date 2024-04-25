@@ -1,0 +1,62 @@
+from multiprocessing import Process, Array, Value
+
+def binary(a, low, high, key, loc):
+    mid = (low + high) // 2
+    low1, low2 = low, mid + 1
+    high1, high2 = mid, high
+    found = False
+
+    while low1 <= high1:
+        if not (key >= a[low1] and key <= a[high1]):
+            low1 = low1 + high1
+            continue
+        
+        mid1 = (low1 + high1) // 2
+        
+        if key == a[mid1]:
+            found = True
+            loc.value = mid1
+            break
+        elif key > a[mid1]:
+            low1 = mid1 + 1
+        elif key < a[mid1]:
+            high1 = mid1 - 1
+
+    while low2 <= high2:
+        if not (key >= a[low2] and key <= a[high2]):
+            low2 = low2 + high2
+            continue
+        
+        mid2 = (low2 + high2) // 2
+        
+        if key == a[mid2]:
+            found = True
+            loc.value = mid2
+            break
+        elif key > a[mid2]:
+            low2 = mid2 + 1
+        elif key < a[mid2]:
+            high2 = mid2 - 1
+
+    if found:
+        return True
+    else:
+        return False
+
+def main():
+    n = int(input("\n enter total no of elements=>"))
+    a = Array('i', n)
+    print("\n enter elements=>")
+    for i in range(n):
+        a[i] = int(input())
+
+    key = int(input("\n enter key to find=>"))
+    loc = Value('i', -1)
+
+    if binary(a, 0, n - 1, key, loc):
+        print("\n Key found at position=>", loc.value + 1)
+    else:
+        print("\n Key not found.")
+
+if __name__ == "__main__":
+    main()
